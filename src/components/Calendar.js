@@ -96,7 +96,7 @@ class Calendar extends Component {
   renderHeader() {
     return (
       <div className="header row flex-middle">
-        <div className="col col-start">
+        <div className="col col-start" onClick={this.previousMonth}>
           <Icon chevron>chevron_left</Icon>
         </div>
         <div className="col col-center">
@@ -129,9 +129,10 @@ class Calendar extends Component {
     );
   }
   renderEvents = (day) => {
-    const events = this.state.events.filter(ev => {
-      return moment(ev.date).isSame(day)
-    })
+    const events = this.state.events.filter(ev => 
+      moment(ev.date).isSame(this.state.currentMonth, 'month') &&
+      moment(ev.date).isSame(day, 'day')
+    )
     const jsx = events.map(ev => <EventDetail>{ev.text}</EventDetail>);
     return (
       <EventContainer>
@@ -207,9 +208,10 @@ class Calendar extends Component {
     })
   }
   renderSummaryEvents = () => {
-    const events = this.state.events.filter(event => {
-      return moment(event.date).isSame(this.state.selectedDate)
-    })
+    const events = this.state.events.filter(ev =>
+      moment(ev.date).isSame(this.state.selectedDate, 'month') &&
+      moment(ev.date).isSame(this.state.selectedDate, 'day')
+    )
 
     const jsx = events.map((ev) => {
       return (
