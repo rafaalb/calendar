@@ -231,10 +231,6 @@ class Calendar extends Component {
     if (this.state.selectedDate) {
       return (
         <Options>
-          <span>
-            {`Selected date: ${moment(this.state.selectedDate).format('MMMM d')}`}
-          </span>
-
           <EventText>Add an event for this day: </EventText>
           <input
             type={'text'}
