@@ -129,10 +129,10 @@ class Calendar extends Component {
     );
   }
   renderEvents = (day) => {
-    const events = this.state.events.filter(event => {
-      return moment(event.date).isSame(day)
+    const events = this.state.events.filter(ev => {
+      return moment(ev.date).isSame(day)
     })
-    const jsx = events.map(event => <EventDetail>event</EventDetail>);
+    const jsx = events.map(ev => <EventDetail>{ev.text}</EventDetail>);
     return (
       <EventContainer>
         {jsx}
