@@ -1,7 +1,6 @@
 import React, {Component } from "react"
 import dateFns from "date-fns"
 import moment from 'moment'
-// import dateFns from 'date-fns'
 import styled from 'styled-components'
 import Button from '@material-ui/core/Button'
 const dateFormat = 'MMMM YYYY';
@@ -129,9 +128,8 @@ class Calendar extends Component {
     );
   }
   renderEvents = (day) => {
-    const events = this.state.events.filter(ev => 
-      moment(ev.date).isSame(this.state.currentMonth, 'month') &&
-      moment(ev.date).isSame(day, 'day')
+    const events = this.state.events.filter(ev =>
+      moment(ev.date).isSame(this.state.currentMonth, 'month') && moment(ev.date).isSame(day, 'day')
     )
     const jsx = events.map(ev => <EventDetail>{ev.text}</EventDetail>);
     return (
@@ -141,7 +139,7 @@ class Calendar extends Component {
     )
   }
   renderCells() {
-    const {selectedDate } = this.state;
+    const { selectedDate } = this.state;
     const monthStart = moment().startOf('month').format('YYYY-MM-DD hh:mm');
     const monthEnd = moment().endOf('month').format('YYYY-MM-DD hh:mm');
 
@@ -156,20 +154,22 @@ class Calendar extends Component {
     let formattedDate = "";
     while (day <= endDate) {
       for (let i = 0; i < 7; i++) {
-        formattedDate = moment(day).format(dateFormat);
-        const auxDay = day;
+        formattedDate = dateFns.format(day, dateFormat);
+        const month = moment(this.state.currentMonth).format('M')
+        const cloneDay = day;
+        const auxDay = moment(cloneDay).set('month', month - 1)
         days.push(
           <Cell
             key={day}
-            onClick={() => this.onDateClick(moment(auxDay))}
+            onClick={() => this.onDateClick(auxDay)}
             monthInRange={!moment(monthStart).isSame(day, 'month')}
-            dayInRange={moment(selectedDate).isSame(day, 'day')}
+            dayInRange={moment(selectedDate).isSame(auxDay, 'date')}
           >
             <Day>{formattedDate}</Day>
-            {this.renderEvents(day)}
+            {this.renderEvents(auxDay)}
           </Cell>
         );
-        day = moment(day).add(1, 'd');
+        day = moment(day).add(1, 'd').clone();
       }
       rows.push(
         <Row key={day}>
@@ -209,10 +209,8 @@ class Calendar extends Component {
   }
   renderSummaryEvents = () => {
     const events = this.state.events.filter(ev =>
-      moment(ev.date).isSame(this.state.selectedDate, 'month') &&
-      moment(ev.date).isSame(this.state.selectedDate, 'day')
+      moment(ev.date).isSame(this.state.currentMonth, 'month') && moment(ev.date).isSame(this.state.selectedDate, 'day')
     )
-
     const jsx = events.map((ev) => {
       return (
         <div>
